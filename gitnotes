@@ -1,3 +1,15 @@
+GIT Topics.
+1. init, add, commit, push, pull, branch, checkout.
+2. remote
+3. clone
+4. fetch
+5. merge
+6. stash
+7. revert
+8. rebase
+9. reset
+10. squash
+
 What is Git?
 Git is a software which keeps track of changes that you make in files and directory.
 -especially test changes, 
@@ -42,3 +54,31 @@ commands and explanation.
 	b. It gives the list of information of files which are needs to be get add using "git add".
 	c. If the file gets added then it will give list of files that needs to be commit "git commit filename".
 
+3. git add
+	a. This command add file to working directory. This file is visible to all branches created under master branch.
+
+4. git commit:
+	a. It will commit the file to the staging area under particular branch. In general it will create an object.
+	b. Its mandatory to give git commit message otherwise it will through below message.	
+"c:\Dropbox\GIT\notes>git commit gitnotes
+ Aborting commit due to empty commit message.
+"
+
+5. git log:
+	a. This command will give detail information of repository. It will give detail information like
+commit ID/object, auther, Date and Git commit message as well.
+
+   git log --oneline:
+	a. This command will give one line information of each commit message.
+
+6. git branch branchname:
+	a. This command will create new branch named branchname
+
+7. git checkout branchname.
+	a. This command will switch to branch called branchname.
+If there is a local changes in current branch and you want to switch to other branch, then it will allow to switch to other branch and through below error.
+
+"error: Your local changes to the following files would be overwritten by checkout:
+        gitnotes
+Please commit your changes or stash them before you can switch branches.
+Aborting"

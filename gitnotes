@@ -1,0 +1,44 @@
+What is Git?
+Git is a software which keeps track of changes that you make in files and directory.
+-especially test changes, 
+-version 1, version 2, version 3
+git can track/manager above version, can allow you to move back and forth version also allows you to check diff between those versions.
+
+Since it manages versions, so it also called Version control system (VCS).
+
+VCS can be used to Source code management (SCM).
+
+Git is distributed Version control.
+--Different users (or teams of users) each maintain their own repositories, instead of working from central repository.
+--changes are stored as "change sets" or "patches"
+	-focus on tracking changes not version of the documents.
+	-different from CVS and SVN, which track versions to versions.
+	-change sets can be exchanged between repositories.
+		-"merge-in change sets" or "apply patches"
+--No single master repository, just many working copies
+	-Each with their own combination of change sets.
+--Imagine changes to a document as sets A,B,C,D,E,F
+	-Repo 1: A,B,C,D,E,F
+	-Repo 2: A,B,C,D
+	-Repo 3: A,B,C,E
+	-Repo 4: A,B,E,F
+--No need to communicate with a central server
+	-faster (communication is not required with a central server)
+	-no network access required (since we are not making any communication with server).
+
+
+git init:
+It initialiZes git project, it will create hidden .git directory.
+
+This will make set-up home for git repository and track all files changes in this directory (.git directory).
+
+commands and explanation.
+1. git init
+	a. It initialiZes git project, it will create hidden .git directory.
+	b. By default it will create branch with the name master.
+
+2. git status
+	a. It gives the information of the branch to which git is currently pointing to.
+	b. It gives the list of information of files which are needs to be get add using "git add".
+	c. If the file gets added then it will give list of files that needs to be commit "git commit filename".
+

@@ -9,6 +9,7 @@ GIT Topics.
 8. rebase
 9. reset
 10. squash
+11. cherry pick
 
 What is Git?
 Git is a software which keeps track of changes that you make in files and directory.
@@ -63,6 +64,9 @@ commands and explanation.
 "c:\Dropbox\GIT\notes>git commit gitnotes
  Aborting commit due to empty commit message.
 "
+	c. If you are in branch x and you switched to your working branch, and you see below message, then you should add and commit the changes.
+"Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)"
 
 5. git log:
 	a. This command will give detail information of repository. It will give detail information like
@@ -82,3 +86,28 @@ If there is a local changes in current branch and you want to switch to other br
         gitnotes
 Please commit your changes or stash them before you can switch branches.
 Aborting"
+After commiting we can switch/checkout to other branch without git push, since commit file from other branch will not be appeared in other branch.
+
+8. git merge:
+a. Creating an edit collision:
+This is the most common type of conflict. It happens when two branches have changed the same part of the same file, and then those branches are merged together. For example, if you make a change on a particular line in a file, and your colleague working in a repository makes a change on the exact same line, a merge conflict occurs. Git has trouble understanding which change should be used, so it asks you to help out.
+When this sort of conflict occurs, Git writes a special block into the file that contains the contents of both versions where the conflict occurred. To complete this type of merge, use your text editor to resolve the conflict, then add the file and commit it to complete the merge.
+
+ In branch-a, you wrote the word "nine," but your friend wrote "eight." Git automatically adds conflict markers to the affected areas. A conflict-marked area begins with <<<<<<< and ends with >>>>>>>. These are also known as the conflict markers. The two conflicting blocks themselves are divided by a =======.
+You have several options here. You can either keep your changes, take your friend's changes, or make a brand new change. Whatever you do, you need to make sure to resolve the conflict such that the file makes sense, and everyone is happy.
+
+In this case, you'll put in a whole new version of the line that reflects what happened. The goal is to get the file to look exactly how you want it. You'll delete the conflict markers, and just type out a new change:
+
+b. Resolving a removed file conflict:
+Removed file conflicts occur when one person edits a file, and another person deletes that file in their branch. Git does not know if you want to keep the file with the new edits, or delete the file and forget about those edits. 
+To deal with this case, we do below scenario.
+	1. Keeping the edited file: First, you'll resolve the conflict by keeping the new changes. Suppose that you added a line to your README.md in branch-b, but someone else has deleted the file entirely in branch-c. Git declares the following conflict:
+"CONFLICT (modify/delete): README.md deleted in HEAD and modified in branch-b. Version branch-b of README.md left in tree.
+Automatic merge failed; fix conflicts and then commit the result."
+	Solution: You can resolve this by adding the file back, and committing it once more:
+
+	2. Resolving by removing the file: Now, you'll resolve that conflict the opposite way: by leaving the file deleted. Again, with a merge conflict, Git declares:
+"CONFLICT (modify/delete): README.md deleted in HEAD and modified in branch-c. Version branch-c of README.md left in tree.
+Automatic merge failed; fix conflicts and then commit the result."
+	Solution: Now, you want to remove the file, so do that with the git rm command:
+	so commit it with the default message:

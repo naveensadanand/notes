@@ -1,3 +1,23 @@
 What is Jenkins?
-Jenkins is a powerful application that allows continuous integration and continuous delivery of projects, regardless of the platform you are working on. 
+Jenkins is a software that allows continous integration. It is a powerful application that allows continuous integration and continuous delivery of projects, regardless of the platform you are working on. 
 It is a free source that can handle any kind of build or continuous integration. You can integrate Jenkins with a number of testing and deployment technologies.
+
+Below is the flow.
+1. Developers check their source code.
+2. Jenkins will pick up the changes source code and trigger a build and run(automate) any tests if required.
+3. The build output will be available in the jenkins dashboards. Automatic notifications can also be sent back to the developer.
+
+What is Continuous Integration?
+Continuous Integration is a development practice that requires developers to integrate code into a shared repository at regular intervals. This concept was meant to remove the problem of finding later occurrence of issues in the build lifecycle. 
+The common practice is that whenever a code commit occurs, a build should be triggered.
+
+Starting Jenkins
+Open the command prompt. From the command prompt, browse to the directory where the jenkins.war file is present. Run the following command
+
+D:\>Java –jar Jenkins.war
+Once the processing is complete without major errors, the following line will come in the output of the command prompt.
+
+INFO: Jenkins is fully up and running
+
+Accessing Jenkins
+Once Jenkins is up and running, one can access Jenkins from the link - http://localhost:8080

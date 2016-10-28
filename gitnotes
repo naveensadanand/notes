@@ -111,3 +111,11 @@ Automatic merge failed; fix conflicts and then commit the result."
 Automatic merge failed; fix conflicts and then commit the result."
 	Solution: Now, you want to remove the file, so do that with the git rm command:
 	so commit it with the default message:
+
+9. git remote
+This command will through "origin" as output.
+
+As you probably know, git is a distributed version control system. Most operations are done locally. To communicate with the outside world, git uses what are called remotes. These are repositories other than the one on your local disk which you can push your changes into (so that other people can see them) or pull from (so that you can get others changes). The command git remote add origin git@github.com:peter/first_app.git creates a new remote called origin located at git@github.com:peter/first_app.git. Once you do this, in your push commands, you can push to origin instead of typing out the whole URL.
+
+remote = remote repository. Stuff that's on your hard drive is local. Stuff that's on GitHub's server is remote. origin = the default name of the remote repository on GitHub corresponding to the repo you're currently in on your machine. master = the default name of the initial branch of a repository. So, "origin master" is the default branch of your repository on GitHub. That's why you do git push origin master to update GitHub based on the changes you committed locally.
+

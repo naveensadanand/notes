@@ -119,3 +119,20 @@ As you probably know, git is a distributed version control system. Most operatio
 
 remote = remote repository. Stuff that's on your hard drive is local. Stuff that's on GitHub's server is remote. origin = the default name of the remote repository on GitHub corresponding to the repo you're currently in on your machine. master = the default name of the initial branch of a repository. So, "origin master" is the default branch of your repository on GitHub. That's why you do git push origin master to update GitHub based on the changes you committed locally.
 
+clone:
+command: git clone git@github.com:whatever .
+The "." at the end specifies the current folder as the checkout folder.	
+Note; If that directory is not empty, this doesn't work.
+so you don't want to run "git init" in this folder before cloning into it. But if you did, then removing the .git folder before cloning will do the trick
+
+go into folder.. if folder is empty, then
+
+git clone git@github.com:whatever .
+else
+
+git init
+git remote add origin PATH/TO/REPO
+git fetch
+git checkout -t origin/master
+
+

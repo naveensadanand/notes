@@ -119,7 +119,7 @@ As you probably know, git is a distributed version control system. Most operatio
 
 remote = remote repository. Stuff that's on your hard drive is local. Stuff that's on GitHub's server is remote. origin = the default name of the remote repository on GitHub corresponding to the repo you're currently in on your machine. master = the default name of the initial branch of a repository. So, "origin master" is the default branch of your repository on GitHub. That's why you do git push origin master to update GitHub based on the changes you committed locally.
 
-clone:
+10. git clone:
 command: git clone git@github.com:whatever .
 The "." at the end specifies the current folder as the checkout folder.	
 Note; If that directory is not empty, this doesn't work.
@@ -134,5 +134,10 @@ git init
 git remote add origin PATH/TO/REPO
 git fetch
 git checkout -t origin/master
+
+
+11. git fetch
+
+Git fetch just updates your repo data, Fetch branches and/or tags (collectively, "refs") from one or more other repositories, along with the objects necessary to complete their histories.
 
 

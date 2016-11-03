@@ -156,3 +156,6 @@ When you use pull, Git tries to automatically do your work for you. It is contex
 When you fetch, Git gathers any commits from the target branch that do not exist in your current branch and stores them in your local repository. However, it does not merge them with your current branch. This is particularly useful if you need to keep your repository up to date, but are working on something that might break if you update your files. To integrate the commits into your master branch, you use merge.
 
 Link: https://longair.net/blog/2009/04/16/git-fetch-and-merge/
+
+Note: Don’t use git pull, use git fetch and then git merge.
+The other problem is that by both fetching and merging in one command, your working directory is updated without giving you a chance to examine the changes you’ve just brought into your repository. 

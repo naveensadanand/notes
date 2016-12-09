@@ -1,4 +1,4 @@
-GIT Topics.
+﻿GIT Topics.
 1. init, add, commit, push, pull, branch, checkout.
 2. remote
 3. clone
@@ -74,6 +74,7 @@ commit ID/object, auther, Date and Git commit message as well.
 
    git log --oneline:
 	a. This command will give one line information of each commit message.
+
 
 6. git branch branchname:
 	a. This command will create new branch named branchname

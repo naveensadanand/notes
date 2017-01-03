@@ -1,4 +1,5 @@
-﻿GIT Topics.
+﻿Reference: https://www.atlassian.com/git/tutorials/learn-git-with-bitbucket-cloud/
+GIT Topics.
 1. init, add, commit, push, pull, branch, checkout.
 2. remote
 3. clone
@@ -11,8 +12,12 @@
 10. squash
 11. cherry pick
 
+What is Version Control System?
+	Version control systems are a category of software tools that help a software team manage changes to source code over time. 
+
 What is Git?
-Git is a software which keeps track of changes that you make in files and directory.
+	Git is a Distributed VCS, a category known as DVCS
+	Git is a software which keeps track of changes that you make in files and directory.
 -especially test changes, 
 -version 1, version 2, version 3
 git can track/manager above version, can allow you to move back and forth version also allows you to check diff between those versions.
@@ -20,6 +25,10 @@ git can track/manager above version, can allow you to move back and forth versio
 Since it manages versions, so it also called Version control system (VCS).
 
 VCS can be used to Source code management (SCM).
+
+Performance
+
+The raw performance characteristics of Git are very strong when compared to many alternatives. Committing new changes, branching, merging and comparing past versions are all optimized for performance. 
 
 Git is distributed Version control.
 --Different users (or teams of users) each maintain their own repositories, instead of working from central repository.
@@ -39,6 +48,9 @@ Git is distributed Version control.
 	-faster (communication is not required with a central server)
 	-no network access required (since we are not making any communication with server).
 
+Git Repository URL:
+The user the_best has a repository called awesome_repo, the URL for that repository would be https://bitbucket.org/the_best/awesome_repo.
+A private repository is only visible to you and those you give access to.
 
 git init:
 It initialiZes git project, it will create hidden .git directory.
@@ -111,6 +123,15 @@ git config --global core.editor vim
 # Add some SVN-like aliases
 git config --global alias.st status
 
+#git config --global push.default matching
+When push.default is set to 'matching', git will push local branches to the remote branches that already exist with the same name.
+
+#git config --global push.default simple 
+Git defaults to the more conservative 'simple' behavior, which only pushes the current branch to the corresponding remote branch that 'git pull' uses to update the current branch.
+
+#git config --global core.askpass 
+In windows Git will prompt for password while cloning, this will prompt only onetime.
+
 We can see above setting in file vi ~/.gitconfig as shown below.
 [user] 
 name = John Smith
@@ -122,8 +143,9 @@ editor = vim
 
 2. git status
 	a. It gives the information of the branch to which git is currently pointing to.
-	b. It gives the list of information of files which are needs to be get add using "git add".
+	b. It gives the list of information of files which are needs to be get add using "git add". The file is untracked, meaning that Git sees a file not part of a previous commit.
 	c. If the file gets added then it will give list of files that needs to be commit "git commit filename".
+	d. Merge conflict information.
 
 3. git add
 	a. The git add command adds a change in the working directory to the staging area.  It tells Git that you want to include updates to a particular file in the next commit. git add command will not effect local repository with any significant way changes are not actually recorded until you run git commit.
@@ -139,9 +161,10 @@ Ans: "git reset HEAD mynewfile.txt" or "git reset HEAD -- mynewfile.txt" This co
 	"git clean -df mynewfile.txt" This command will remove mynewfile.txt from current directory. If you do not provide file name like "git clean -df" this will remove all unstaged file from working directory. So be careful while using "git clean -df" command.
 
 The Staging Area:
-a. It as a buffer between the working directory and the project history.
+a. It as a buffer between the working directory and the project history. The staging area is where you prepare a snapshot of a set of changes before committing them to the official history.
 
-4. git commit:
+4. git commit: 
+The git commit takes the staged snapshot and commits it to the project history
                 "git commit -m "my first commit"
 	a. It will commit the file to the staging area under particular branch. In general it will create an object.
 	b. Its mandatory to give git commit message otherwise it will through below message.	
@@ -161,7 +184,30 @@ b. Basically git commit "records changes to the repository" while git push "upda
 		commit: adding changes to the local repository
 		push: to transfer the last commit(s) to a remote server
 
+git push:
+git push origin master
+	Bitbucket using git push origin master. This command specifies that you are pushing to the master branch (the branch on Bitbucket) on origin (the Bitbucket server).
 
+Common practice/process:
+	1. Created a branch and checked it out
+		git checkout -b <newbranch>
+	2. Made a change in the new branch
+		git add 
+	3. Committed the change to the new branch
+		git commit -a
+	4. Integrated that change back into the main branch
+		git checkout master             #we need to go to master branch(central)
+		git merge new-feature           #merge new-feature branch in master.
+	5. Deleted the branch you are no longer using.
+		git branch -d new-feature       #delete new-feature branch.
+	6. push your change to git repository.
+		git push origin master 
+
+git pull:
+	1. Pull changes from a remote repository.
+	2. The git pull command merges the file from your remote repository (Bitbucket) into your local repository with a single command.
+
+Note: We should not use pull blindly, since it will override the changes made locally.
 
 5. git log:
 	a. This command will give detail information of repository. It will give detail information like
@@ -171,8 +217,11 @@ commit ID/object, auther, Date and Git commit message as well.
 	a. This command will give one line information of each commit message.
 
 
-6.Git branch:  A branch represents an independent line of development.
-The git branch command lets you create, list, rename, and delete branches.
+6.Git branch:  
+	1. A branch represents an independent line of development.
+	2. The git branch command lets you create, list, rename, and delete branches.
+	3. Branches will allow you to update your files and only share the information when you're ready.
+	4. Branches are most powerful when you're working on a team. You can work on your own part of a project from your own branch,
 
 	1. command "git branch"
 	List all of the branches in your repository.
@@ -186,19 +235,19 @@ The git branch command lets you create, list, rename, and delete branches.
 	Rename the current branch to <branch>.
 
 Deleting Branches
-Once you’ve finished working on a branch and have merged it into the main code base, you’re free to delete the branch without losing any history.
+	Once you’ve finished working on a branch and have merged it into the main code base, you’re free to delete the branch without losing any history.
 
 What is the need of branch?
-When you want to add a new feature or fix a bug, you spawn a new branch to encapsulate your changes. This makes sure that unstable code is never committed to the main code base, and it gives you the chance to clean up your feature’s history before merging it into the main branch.
+	When you want to add a new feature or fix a bug, you spawn a new branch to encapsulate your changes. This makes sure that unstable code is never committed to the main code base, and it gives you the chance to clean up your feature’s history before merging it into the main branch.
 
 What actually branch is, Is the branch represents a seperate storage or directory of container?
-Git stores a branch as a reference to a commit. In this sense, a branch represents the tip of a series of commits—it's not a container for commits. The history for a branch is extrapolated through the commit relationships.
-Branches are just pointers to commits. When you create a branch, all Git needs to do is create a new pointer—it doesn’t change the repository in any other way.
+	a. Git stores a branch as a reference to a commit. In this sense, a branch represents the tip of a series of commits—it's not a container for commits. The history for a branch is extrapolated through the commit relationships.
+	b. Branches are just pointers to commits. When you create a branch, all Git needs to do is create a new pointer—it doesn’t change the repository in any other way.
 
 
 
 7. git checkout
-The git checkout command lets you navigate between the branches created by git branch.
+	The git checkout command lets you navigate between the branches created by git branch.
 	1. git checkout <existing-branch>
 	Check out the specified branch, which should have already been created with git branch. 
 
@@ -224,7 +273,7 @@ Detached HEADs:
 	If you were to start developing a feature while in a detached HEAD state, there would be no branch allowing you to get back to it.
 	3. The point is, your development should always take place on a branch—never on a detached HEAD. This makes sure you always have a reference to your new commits. However, if you’re just looking at an old commit, it doesn’t really matter if you’re in a detached HEAD state or not. This makes sure you always have a reference to your new commits. However, if you’re just looking at an old commit, it doesn’t really matter if you’re in a detached HEAD state or not.
 	4. If you checkout a commit, it will switch to "detached HEAD", and you made changes and commit the changes and it looks good to be have in repository, then you can simply create a branch or move a branch to push the changes to repository.
-	Note: in detached HEAD you can add the file and commit the file, but you cannot push the changes to Repository, if you want to push above is the procedure.
+	Note: in detached HEAD you can add the file and commit the file, but you cannot push the changes to Repository,i.e: when you make changes and commit them, these changes do NOT belong to any branch. if you want to push changes above is the procedure.
 
 
 Branching example:
@@ -240,7 +289,74 @@ git checkout master
 From here (i.e master branch), you have the option to merge in the completed feature, branch off a brand new, unrelated feature, or do some work with the stable version of your project.
 
 
-8. git merge:
+8. git merge: The git merge command lets you take the independent lines of development created by git branch and integrate them into a single branch.
+	1. git merge <branch>
+	Merge the specified branch into the current branch.
+	2. git merge --no-ff <branch>
+	Merge the specified branch into the current branch, but always generate a merge commit (even if it was a fast-forward merge). This is useful for documenting all merges that occur in your repository.
+
+Fast-forward:
+	3. A fast-forward merge can occur when there is a linear path from the current branch tip to the target branch. i.e Instead of merging the branches, all Git has to do to integrate the histories is move (i.e., “fast forward”) the current branch tip up to the target branch tip.
+	4. A fast-forward merge is not possible if the branches have diverged. When there is not a linear path to the target branch, Git has no choice but to combine them via a 3-way merge.
+
+# Start a new feature, below command will create new branch <new-feature> from master as base.
+git checkout -b new-feature master
+
+# Edit some files
+git add <file>
+git commit -m "Start a feature"
+
+# Edit some files
+git add <file>
+git commit -m "Finish a feature"
+
+# Merge in the new-feature branch,
+git checkout master		#we need to go to master branch(central)
+git merge new-feature   	#merge new-feature branch in master.
+git branch -d new-feature	#delete new-feature branch.
+
+3-Way Merge:
+	5. When there is not a linear path to the target branch, Git has no choice but to combine them via a 3-way merge. 3-way merger is required in non-linear path i.e both master and tip current branch are in progress parallely.
+	6. The nomenclature comes from the fact that Git uses three commits to generate the merge commit: the two branch tips and their common ancestor.
+	7. 3-Way Merge is used in long-run projects or several developers working on same project, while fast-forward is used in small features or bug fixes.
+
+
+# Start a new feature
+git checkout -b new-feature master
+
+# Edit some files
+git add <file>
+git commit -m "Start a feature"
+
+# Edit some files
+git add <file>
+git commit -m "Finish a feature"
+
+# Develop the master branch
+git checkout master
+
+# Edit some files
+git add <file>
+git commit -m "Make some super-stable changes to master"
+
+# Merge in the new-feature branch
+git merge new-feature
+git branch -d new-feature
+
+Resolving Conflicts
+	1. If the two branches you're trying to merge both changed the same part of the same file, Git won't be able to figure out which version to use. 
+	2. When you encounter a merge conflict, running the git status command shows you which files need to be resolved.
+For example, if both branches modified the same section of hello.py, you would see something like the following:
+
+# On branch master
+# Unmerged paths:
+# (use "git add/rm ..." as appropriate to mark resolution)
+#
+# both modified: hello.py
+#
+Then, you can go in and fix up the merge to your liking. When you're ready to finish the merge, all you have to do is run git add on the conflicted file(s) to tell Git they're resolved. Then, you run a normal git commit to generate the merge commit.
+
+
 a. Creating an edit collision:
 This is the most common type of conflict. It happens when two branches have changed the same part of the same file, and then those branches are merged together. For example, if you make a change on a particular line in a file, and your colleague working in a repository makes a change on the exact same line, a merge conflict occurs. Git has trouble understanding which change should be used, so it asks you to help out.
 When this sort of conflict occurs, Git writes a special block into the file that contains the contents of both versions where the conflict occurred. To complete this type of merge, use your text editor to resolve the conflict, then add the file and commit it to complete the merge.
@@ -257,7 +373,6 @@ To deal with this case, we do below scenario.
 "CONFLICT (modify/delete): README.md deleted in HEAD and modified in branch-b. Version branch-b of README.md left in tree.
 Automatic merge failed; fix conflicts and then commit the result."
 	Solution: You can resolve this by adding the file back, and committing it once more:
-
 	2. Resolving by removing the file: Now, you'll resolve that conflict the opposite way: by leaving the file deleted. Again, with a merge conflict, Git declares:
 "CONFLICT (modify/delete): README.md deleted in HEAD and modified in branch-c. Version branch-c of README.md left in tree.
 Automatic merge failed; fix conflicts and then commit the result."
@@ -312,4 +427,17 @@ Link: https://longair.net/blog/2009/04/16/git-fetch-and-merge/
 Note: Dont use git pull, use git fetch and then git merge.
 The other problem is that by both fetching and merging in one command, your working directory is updated without giving you a chance to examine the changes youve just brought into your repository. 
 
-13. git merge
+
+
+
+Forking
+When you work with another user's public Bitbucket repository, typically you have read access to the code but not write access. This is where the concept of forking comes in. Here's how it works:
+
+	1. Fork the repository to copy it to your own account.
+	2. Fork thClone the forked repository from Bitbucket to your local system.
+	3. Fork thMake changes to the local repository.
+	4. Fork thPush the changes to your forked repository on Bitbucket.
+	5. Fork thCreate a pull request from the original repository you forked to add the changes you made.
+	6. Fork thWait for the repository owner to accept or reject your changes.
+
+If a repository owner accepts the pull request, Bitbucket merges your code changes into the original repository.

@@ -1,0 +1,310 @@
+﻿GIT Topics.
+1. init, add, commit, push, pull, branch, checkout.
+2. remote
+3. clone
+4. fetch
+5. merge
+6. stash
+7. revert
+8. rebase
+9. reset
+10. squash
+11. cherry pick
+
+What is Git?
+Git is a software which keeps track of changes that you make in files and directory.
+-especially test changes, 
+-version 1, version 2, version 3
+git can track/manager above version, can allow you to move back and forth version also allows you to check diff between those versions.
+
+Since it manages versions, so it also called Version control system (VCS).
+
+VCS can be used to Source code management (SCM).
+
+Git is distributed Version control.
+--Different users (or teams of users) each maintain their own repositories, instead of working from central repository.
+--changes are stored as "change sets" or "patches"
+	-focus on tracking changes not version of the documents.
+	-different from CVS and SVN, which track versions to versions.
+	-change sets can be exchanged between repositories.
+		-"merge-in change sets" or "apply patches"
+--No single master repository, just many working copies
+	-Each with their own combination of change sets.
+--Imagine changes to a document as sets A,B,C,D,E,F
+	-Repo 1: A,B,C,D,E,F
+	-Repo 2: A,B,C,D
+	-Repo 3: A,B,C,E
+	-Repo 4: A,B,E,F
+--No need to communicate with a central server
+	-faster (communication is not required with a central server)
+	-no network access required (since we are not making any communication with server).
+
+
+git init:
+It initialiZes git project, it will create hidden .git directory.
+
+This will make set-up home for git repository and track all files changes in this directory (.git directory).
+
+commands and explanation.
+1. git init
+	a. It initialiZes git project, it will create hidden .git directory.
+	b. By default it will create branch with the name master.
+git init <directory>
+Create an empty Git repository in the specified directory. Running this command will create a new folder called <directory containing nothing but the .git subdirectory.
+
+git init --bare <directory> This command creates a bare repository.
+What is bare repository?
+The --bare flag creates a repository that doesn’t have a working directory, making it impossible to edit files and commit changes in that repository.
+Central repositories should always be created as bare repositories because pushing branches to a non-bare repository has the potential to overwrite changes.
+Think of --bare as a way to mark a repository as a storage facility, opposed to a development environment. This means that for virtually all Git workflows, the central repository is bare, and developers local repositories are non-bare.
+EXample: 
+step 1: ssh <user>@<host> 	: First, you SSH into the server that will contain your central repository. 
+step 2: cd path/above/repo 	: Then, you navigate to wherever you’d like to store the project.
+step 3: git init --bare my-project.git : use the --bare flag to create a central storage repository. 
+Now Developers would then [clone](/tutorials/setting-up-a-repository/git-clone) my-project.git to create a local copy on their development machine.
+
+
+git clone:
+
+git clone <repo>
+Clone the existing repository located at <repo> onto the local machine. 
+
+git clone <repo> <directory>
+Clone the repository located at <repo> into the folder called <directory> on the local machine.
+
+Note: If a project has already been set up in a central repository, the git clone command is the most common way for users to obtain a development copy. 
+
+
+Repo-To-Repo Collaboration:
+Git makes no distinction between the working copy and the central repository—they are all full-fledged Git repositories.
+Git’s collaboration model is based on repository-to-repository interaction. Instead of checking a working copy into SVN’s central repository, you push or pull commits from one repository to another another repository.
+
+git config:
+1. The git config command lets you configure your Git installation (or an individual repository) from the command line.
+
+2. git config user.name <name>
+Define the author name to be used for all commits in the current repository. Typically, you’ll want to use the --global flag to set configuration options for the current user.
+
+3. git config --global user.name <name>
+Define the author name to be used for all commits by the current user.
+
+4. git config --global user.email <email>
+Define the author email to be used for all commits by the current user.
+
+Note: All configuration options are stored in plaintext files, so the git config command is really just a convenient command-line interface. 
+
+Git stores configuration options in three separate files, which lets you scope options to individual repositories, users, or the entire system:
+	1. <repo>/.git/config – Repository-specific settings.
+	2. ~/.gitconfig – User-specific settings. This is where options set with the --global flag are stored.
+	3. $(prefix)/etc/gitconfig – System-wide settings.
+Example: 
+# Tell Git who you are
+git config --global user.name "John Smith"
+git config --global user.email john@example.com
+
+# Select your favorite text editor
+git config --global core.editor vim
+
+# Select your favorite text editor
+git config --global core.editor vim
+
+# Add some SVN-like aliases
+git config --global alias.st status
+
+We can see above setting in file vi ~/.gitconfig as shown below.
+[user] 
+name = John Smith
+email = john@example.com
+[alias]
+st = status
+[core]
+editor = vim
+
+2. git status
+	a. It gives the information of the branch to which git is currently pointing to.
+	b. It gives the list of information of files which are needs to be get add using "git add".
+	c. If the file gets added then it will give list of files that needs to be commit "git commit filename".
+
+3. git add
+	a. The git add command adds a change in the working directory to the staging area.  It tells Git that you want to include updates to a particular file in the next commit. git add command will not effect local repository with any significant way changes are not actually recorded until you run git commit.
+        b. Stage all changes in <directory> for the next commit.
+		"git add -p"
+Question on git add:
+1. Why git add required?
+Ans: a. "git add filename" this command add changes to staging area, and commit command picks what's in the staging area.
+b. Git works by using a "staging" area where you prepare what you are going to bundle together as a commit. So, you decided what set of changes you want to commit (e.g. all or a subset), you add them to the staging area, and then you commit what's in the staging area.
+c. If you want to just commit stuff that you've changed, but not include newly created files you can use git commit -a "Comment for modified files already under source control."
+2. How do i remove a file from staging area?
+Ans: "git reset HEAD mynewfile.txt" or "git reset HEAD -- mynewfile.txt" This command will unstage from the staging area. Your modifications will be kept and the file will once again show up in the modified. If you really wants to delete after unstaging, you can use below command.
+	"git clean -df mynewfile.txt" This command will remove mynewfile.txt from current directory. If you do not provide file name like "git clean -df" this will remove all unstaged file from working directory. So be careful while using "git clean -df" command.
+
+The Staging Area:
+a. It as a buffer between the working directory and the project history.
+
+4. git commit:
+                "git commit -m "my first commit"
+	a. It will commit the file to the staging area under particular branch. In general it will create an object.
+	b. Its mandatory to give git commit message otherwise it will through below message.	
+		"c:\Dropbox\GIT\notes>git commit gitnotes Aborting commit due to empty commit message."
+	c. If you are in branch x and you switched to your working branch, and you see below message, then you should add and commit the changes.
+"Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)"
+
+		"git commit -a"
+Above command with -a, Commit a snapshot of all changes in the working directory. This only includes modifications to tracked files (those that have been added with git add at some point in their history).
+
+Note: SVN(perforce) commit consists of a diff compared to the original file added to the repository. Git, on the other hand, records the entire contents of each file in every commit. This makes many Git operations much faster than SVN, since a particular version of a file doesn’t have to be “assembled” from its diffs—the complete revision of each file is immediately available from Git's internal database.
+Question on git commit:
+Why git commit required? What is difference between git commit and git push?
+a. The git commit command commits the staged snapshot to the project history. Snapshots are committed to the local repository, and this requires absolutely no interaction with other Git repositories.
+b. Basically git commit "records changes to the repository" while git push "updates remote refs along with associated objects". So the first one is used in connection with your local repository, while the latter one is used to interact with a remote repository.
+		commit: adding changes to the local repository
+		push: to transfer the last commit(s) to a remote server
+
+
+
+5. git log:
+	a. This command will give detail information of repository. It will give detail information like
+commit ID/object, auther, Date and Git commit message as well.
+
+   git log --oneline:
+	a. This command will give one line information of each commit message.
+
+
+6.Git branch:  A branch represents an independent line of development.
+The git branch command lets you create, list, rename, and delete branches.
+
+	1. command "git branch"
+	List all of the branches in your repository.
+	2. git branch branchname:
+	This command will create new branch named branchname
+	3. git branch -d <branch>
+	Delete the specified branch. This is a “safe” operation in that Git prevents you from deleting the branch if it has unmerged changes. if the branch hasn’t been merged, the above command will output an error message: "error: The branch 'crazy-experiment' is not fully merged.If you are sure you want to delete it, run 'git branch -D crazy-experiment'"
+	4. git branch -D <branch>
+	Force delete the specified branch, even if it has unmerged changes. 
+     	5. git branch -m <branch>
+	Rename the current branch to <branch>.
+
+Deleting Branches
+Once you’ve finished working on a branch and have merged it into the main code base, you’re free to delete the branch without losing any history.
+
+What is the need of branch?
+When you want to add a new feature or fix a bug, you spawn a new branch to encapsulate your changes. This makes sure that unstable code is never committed to the main code base, and it gives you the chance to clean up your feature’s history before merging it into the main branch.
+
+What actually branch is, Is the branch represents a seperate storage or directory of container?
+Git stores a branch as a reference to a commit. In this sense, a branch represents the tip of a series of commits—it's not a container for commits. The history for a branch is extrapolated through the commit relationships.
+Branches are just pointers to commits. When you create a branch, all Git needs to do is create a new pointer—it doesn’t change the repository in any other way.
+
+
+
+7. git checkout
+The git checkout command lets you navigate between the branches created by git branch.
+	1. git checkout <existing-branch>
+	Check out the specified branch, which should have already been created with git branch. 
+
+	2. git checkout -b <new-branch>
+	Create and check out <new-branch>. 
+	3. git checkout -b <new-branch> <existing-branch>
+	Same as the above invocation, but base the new branch off of <existing-branch>
+
+If there is a local changes in current branch and you want to switch to other branch, then it will allow to switch to other branch and through below error.
+
+"error: Your local changes to the following files would be overwritten by checkout:
+        gitnotes
+Please commit your changes or stash them before you can switch branches.
+Aborting"
+After commiting we can switch/checkout to other branch without git push, since commit file from other branch will not be appeared in switched branch.
+
+
+Detached HEADs:
+	1. HEAD is Git’s way of referring to the current snapshot. Internally, the git checkout command simply updates the HEAD to point to either the specified branch or commit.
+	2. When HEAD points to a branch, Git doesn't complain, but when you check out a commit, it switches into a “detached HEAD” state. This is a warning telling you that everything you’re doing is “detached” from the rest of your project’s development. 
+	If you were to start developing a feature while in a detached HEAD state, there would be no branch allowing you to get back to it.
+	3. The point is, your development should always take place on a branch—never on a detached HEAD. This makes sure you always have a reference to your new commits. However, if you’re just looking at an old commit, it doesn’t really matter if you’re in a detached HEAD state or not. This makes sure you always have a reference to your new commits. However, if you’re just looking at an old commit, it doesn’t really matter if you’re in a detached HEAD state or not.
+
+Branching example:
+git checkout new-feature
+Then, you can commit new snapshots.
+
+# Edit some files
+git add <file>
+git commit -m "Started work on a new feature"
+All of these commits are recorded in new-feature, which is completely isolated from master.
+When it’s time to get back to “official” code base, simply check out the master branch:
+git checkout master
+From here (i.e master branch), you have the option to merge in the completed feature, branch off a brand new, unrelated feature, or do some work with the stable version of your project.
+
+
+8. git merge:
+a. Creating an edit collision:
+This is the most common type of conflict. It happens when two branches have changed the same part of the same file, and then those branches are merged together. For example, if you make a change on a particular line in a file, and your colleague working in a repository makes a change on the exact same line, a merge conflict occurs. Git has trouble understanding which change should be used, so it asks you to help out.
+When this sort of conflict occurs, Git writes a special block into the file that contains the contents of both versions where the conflict occurred. To complete this type of merge, use your text editor to resolve the conflict, then add the file and commit it to complete the merge.
+
+ In branch-a, you wrote the word "nine," but your friend wrote "eight." Git automatically adds conflict markers to the affected areas. A conflict-marked area begins with <<<<<<< and ends with >>>>>>>. These are also known as the conflict markers. The two conflicting blocks themselves are divided by a =======.
+You have several options here. You can either keep your changes, take your friend's changes, or make a brand new change. Whatever you do, you need to make sure to resolve the conflict such that the file makes sense, and everyone is happy.
+
+In this case, you'll put in a whole new version of the line that reflects what happened. The goal is to get the file to look exactly how you want it. You'll delete the conflict markers, and just type out a new change:
+
+b. Resolving a removed file conflict:
+Removed file conflicts occur when one person edits a file, and another person deletes that file in their branch. Git does not know if you want to keep the file with the new edits, or delete the file and forget about those edits. 
+To deal with this case, we do below scenario.
+	1. Keeping the edited file: First, you'll resolve the conflict by keeping the new changes. Suppose that you added a line to your README.md in branch-b, but someone else has deleted the file entirely in branch-c. Git declares the following conflict:
+"CONFLICT (modify/delete): README.md deleted in HEAD and modified in branch-b. Version branch-b of README.md left in tree.
+Automatic merge failed; fix conflicts and then commit the result."
+	Solution: You can resolve this by adding the file back, and committing it once more:
+
+	2. Resolving by removing the file: Now, you'll resolve that conflict the opposite way: by leaving the file deleted. Again, with a merge conflict, Git declares:
+"CONFLICT (modify/delete): README.md deleted in HEAD and modified in branch-c. Version branch-c of README.md left in tree.
+Automatic merge failed; fix conflicts and then commit the result."
+	Solution: Now, you want to remove the file, so do that with the git rm command:
+	so commit it with the default message:
+
+9. git remote
+This command will through "origin" as output.
+
+As you probably know, git is a distributed version control system. Most operations are done locally. To communicate with the outside world, git uses what are called remotes. These are repositories other than the one on your local disk which you can push your changes into (so that other people can see them) or pull from (so that you can get others changes). The command git remote add origin git@github.com:peter/first_app.git creates a new remote called origin located at git@github.com:peter/first_app.git. Once you do this, in your push commands, you can push to origin instead of typing out the whole URL.
+
+remote = remote repository. Stuff that's on your hard drive is local. Stuff that's on GitHub's server is remote. origin = the default name of the remote repository on GitHub corresponding to the repo you're currently in on your machine. master = the default name of the initial branch of a repository. So, "origin master" is the default branch of your repository on GitHub. That's why you do git push origin master to update GitHub based on the changes you committed locally.
+
+10. git clone:
+command: git clone git@github.com:whatever .
+The "." at the end specifies the current folder as the checkout folder.	
+Note; If that directory is not empty, this doesn't work.
+so you don't want to run "git init" in this folder before cloning into it. But if you did, then removing the .git folder before cloning will do the trick
+
+go into folder.. if folder is empty, then
+
+git clone git@github.com:whatever .
+else
+
+git init
+git remote add origin PATH/TO/REPO
+git fetch
+git checkout -t origin/master
+
+
+11. git fetch
+
+Git fetch just updates your repo data, Fetch branches and/or tags (collectively, "refs") from one or more other repositories, along with the objects necessary to complete their histories.
+
+12. git pull
+
+Incorporates changes from a remote repository into the current branch. In its default mode, git pull is shorthand for git fetch followed by git merge FETCH_HEAD.
+More precisely, git pull runs git fetch with the given parameters and calls git merge to merge the retrieved branch heads into the current branch. With --rebase, it runs git rebase instead of git merge.
+
+Difference between fetch and pull.
+
+a. In the simplest terms, git pull does a git fetch followed by a git merge.
+You can do a git fetch at any time to update your remote-tracking branches under refs/remotes/<remote>/. This operation never changes any of your own local branches under refs/heads, and is safe to do without changing your working copy.
+
+A git pull is what you would do to bring a local branch up-to-date with its remote version, while also updating your other remote-tracking branches.
+
+When you use pull, Git tries to automatically do your work for you. It is context sensitive, so Git will merge any pulled commits into the branch you are currently working in.  pull automatically merges the commits without letting you review them first. If you dont closely manage your branches, you may run into frequent conflicts.
+When you fetch, Git gathers any commits from the target branch that do not exist in your current branch and stores them in your local repository. However, it does not merge them with your current branch. This is particularly useful if you need to keep your repository up to date, but are working on something that might break if you update your files. To integrate the commits into your master branch, you use merge.
+
+Link: https://longair.net/blog/2009/04/16/git-fetch-and-merge/
+
+Note: Dont use git pull, use git fetch and then git merge.
+The other problem is that by both fetching and merging in one command, your working directory is updated without giving you a chance to examine the changes youve just brought into your repository. 
+
+13. git merge

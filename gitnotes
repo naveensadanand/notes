@@ -224,6 +224,8 @@ Detached HEADs:
 	If you were to start developing a feature while in a detached HEAD state, there would be no branch allowing you to get back to it.
 	3. The point is, your development should always take place on a branch—never on a detached HEAD. This makes sure you always have a reference to your new commits. However, if you’re just looking at an old commit, it doesn’t really matter if you’re in a detached HEAD state or not. This makes sure you always have a reference to your new commits. However, if you’re just looking at an old commit, it doesn’t really matter if you’re in a detached HEAD state or not.
 
+
+
 Branching example:
 git checkout new-feature
 Then, you can commit new snapshots.

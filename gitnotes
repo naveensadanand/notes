@@ -223,6 +223,9 @@ Detached HEADs:
 	2. When HEAD points to a branch, Git doesn't complain, but when you check out a commit, it switches into a “detached HEAD” state. This is a warning telling you that everything you’re doing is “detached” from the rest of your project’s development. 
 	If you were to start developing a feature while in a detached HEAD state, there would be no branch allowing you to get back to it.
 	3. The point is, your development should always take place on a branch—never on a detached HEAD. This makes sure you always have a reference to your new commits. However, if you’re just looking at an old commit, it doesn’t really matter if you’re in a detached HEAD state or not. This makes sure you always have a reference to your new commits. However, if you’re just looking at an old commit, it doesn’t really matter if you’re in a detached HEAD state or not.
+	4. If you checkout a commit, it will switch to "detached HEAD", and you made changes and commit the changes and it looks good to be have in repository, then you can simply create a branch or move a branch to push the changes to repository.
+	Note: in detached HEAD you can add the file and commit the file, but you cannot push the changes to Repository, if you want to push above is the procedure.
+
 
 Branching example:
 git checkout new-feature

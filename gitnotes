@@ -217,6 +217,16 @@ commit ID/object, auther, Date and Git commit message as well.
 	a. This command will give one line information of each commit message.
 
 
+git stash:
+	1. git stash temporarily shelves (or stashes) changes you've made to your working copy so you can work on something else, and then come back and re-apply them later on.
+
+	Stashing your work
+		git stash	(command to stash).
+	a. The git stash command takes your uncommitted changes (both staged and unstaged), saves them away for later use, and then reverts them from your working copy.
+	b. At this point you're free to make changes, create new commits, switch branches, and perform any other Git operations; then come back and re-apply your stash when you're ready.
+	c. Note that the stash is local to your Git repository; stashes are not transferred to the server when you push.
+
+
 6.Git branch:  
 	1. A branch represents an independent line of development.
 	2. The git branch command lets you create, list, rename, and delete branches.

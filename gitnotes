@@ -560,6 +560,23 @@ Automatic merge failed; fix conflicts and then commit the result."
 	Solution: Now, you want to remove the file, so do that with the git rm command:
 	so commit it with the default message:
 
+git revert:
+	git revert <commit>
+	1. Generate a new commit that undoes all of the changes introduced in <commit>, then apply it to the current branch.
+	2. This can be useful, for example, if you’re tracking down a bug and find that it was introduced by a single commit. Instead of manually going in, fixing it, and committing a new snapshot, you can use git revert to automatically do all of this for you.
+
+Example:
+It commits a snapshot, then immediately undoes it with a revert.
+
+# Edit some tracked files
+
+# Commit a snapshot
+git commit -m "Make some changes that will be undone"
+
+# Revert the commit we just created, that is above command has pointed HEAD to commit, so it will revert it and HEAD will point to current branch.
+git revert HEAD 
+
+
 9. git remote
 This command will through "origin" as output.
 

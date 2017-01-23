@@ -1,0 +1,102 @@
+1. init, remote, add, commit, push, pull, branch, checkout.
+
+git init
+	This will initialize a project and create hidden .git folder.
+
+git remote
+	This will help to create, view, delete connections from remote repositary.
+
+	git remote -v : This command will list of remote repositary you have to connect.
+	git remote add <name> <URL> : Create a new connection to a remote repository. After adding a remote, you’ll be able to use <name> as a convenient shortcut for <url> in other Git commands.
+	git remote rm <name> : Remove the connection to the remote repository called <name>.
+	git remote rename <old-name> <new-name> : Rename a remote connection from <old-name> to <new-name>
+
+git add
+	This command add changes in the working directory to staging area.
+Question on git add:
+1. Why git add required?
+        1. "git add filename" this command add changes to staging area, and commit command picks what's in the staging area.
+        2. Git works by using a "staging" area where you prepare what you are going to bundle together as a commit. So, you decided what set of changes you want to commit (e.g. all or a subset), you add them to the staging area, and then you commit what's in the staging area.
+2. How do i remove a file from staging area?
+        1. "git reset HEAD mynewfile.txt" or "git reset HEAD -- mynewfile.txt" This command will unstage from the staging area. Your modifications will be kept and the file will once again show up in the modified. If you really wants to delete after unstaging, you can use below command.
+        2. "git clean -df mynewfile.txt" This command will remove mynewfile.txt from current directory. If you do not provide file name like "git clean -df" this will remove all unstaged file from working directory. So be careful while using "git clean -df" command.
+
+
+git commit:
+	The git commit takes the staged snapshot and commits it to the project history.
+	git commit -m "Start a feature"
+	This command will commit or take snapshot of staging area and add it to repository History.
+
+git push:
+	"git push <remote> <branch>" : Push the specified branch to <remote>, along with all of the necessary commits and internal objects.
+
+	"git push origin master" : This command specifies that you are pushing to the master branch (the branch on Bitbucket) on origin (the Bitbucket server).
+
+	git push <remote> --force : This results in a non-fast-forward merge. The --force flag overrides this behavior and makes the remote repository’s branch match your local one, deleting any upstream changes that may have occurred since you last pulled.
+
+	"git push <remote> --all": Push all of your local branches to the specified remote.
+
+git pull:
+        1. Pull changes from a remote repository.
+        2. The git pull command merges the file from your remote repository (Bitbucket) into your local repository with a single command.
+
+Note: We should not use pull blindly, since it will override the changes made locally.
+
+
+git branch:
+	The git branch command lets you create, list, rename, and delete branches.
+
+	"git branch": List all of the branches in your local repository.
+	"git branch -a" or all: List both remote-tracking branches and local branches.
+	"git branch -r": To view your remote branches.
+	"git branch <new-branch>": This will create new branch.
+	"git branch -d <branch>":  Delete the specified branch. This is a “safe” operation in that Git prevents you from deleting the branch if it has unmerged changes. 
+	"git branch -D <branch>":  Force delete the specified branch, even if it has unmerged changes.
+	"git branch -m <branch>":  Rename the current branch to <branch>
+
+What is the need of branch?
+        When you want to add a new feature or fix a bug, you spawn a new branch to encapsulate your changes. This makes sure that unstable code is never committed to the main code base, and it gives you the chance to clean up your feature’s history before merging it into the main branch.
+
+What actually branch is, Is the branch represents a seperate storage or directory of container?
+        a. Git stores a branch as a reference to a commit. In this sense, a branch represents the tip of a series of commits—it's not a container for commits.
+
+
+git checkout: git checkout command simply updates the HEAD to point to either the specified branch or commit.
+	Its serves 1. Check out file, check out commits, check out branches.	
+
+checkout file:
+	1. Checking out a file lets you see an old version of that particular file, leaving the rest of your working directory untouched.
+	2. "git checkout a1e8fb5 hello.py" : checking out an old file of commit ID:a1e8fb5 does affect the current state of your repository. with this You can re-commit the old version in a new snapshot (add and commit). Its like revert back to an old version of an individual file.
+	3. If you decide you don’t want to keep the old version, you can check out the most recent version with the following: "git checkout HEAD hello.py" since HEAD will point to current branch.
+
+checkout commit:
+	1. Checking out a commit makes the entire working directory match that commit. This can be used to view an old state of your project without altering your current state in any way.
+	2. "git checkout <commit> <file>"       Check out a previous version of a file. This turns the <file> that resides in the working directory into an exact copy of the one from <commit> and adds it to the staging area.
+	3. "git checkout <commit>" : Update all files in the working directory to match the specified commit.This will put you in a detached HEAD state.
+        4. Checking out an old commit is a read-only operation. The “current” state of your project remains untouched in the master branch.
+        5. During the normal course of development, the HEAD usually points to master or some other local branch, but when you check out a previous commit, HEAD no longer points to a branch—it points directly to a commit. This is called a “detached HEAD” state.
+
+Example: "git checkout a1e8fb5" This makes your working directory match the exact state of the a1e8fb5 commit. You can look at files, compile the project, run tests, and even edit files without worrying about losing the current state of the project.Nothing you do in here will be saved in your repository. To continue developing, you need to get back to the “current” state of your project: "git checkout master".
+What is difference between usage of commands "git checkout <commit>" and "git checkout <commit> <file>"?
+        "git checkout <commit>": Update all files in the working directory to match the specified commit. This will put you in a detached HEAD state.
+        "git checkout <commit> <file>": Check out a previous version of a file. This turns the <file> that resides in the working directory into an exact copy of the one from <commit> and "adds it to the staging area".
+
+checkout branch:
+        1. git checkout <existing-branch> : Check out the specified branch, which should have already been created with git branch.
+
+        2. git checkout -b <new-branch>: Create and check out <new-branch>.
+        3. git checkout -b <new-branch> <existing-branch>: Same as the above invocation, but base the new branch off of <existing-branch>
+        4. git checkout --track origin/<existing-branch>: It will switch to remote branch which is aready part of master branch of remote repository.
+
+Detached HEADs:
+	1. If you checkout a commit, it will switch to "detached HEAD".
+	2. In detached HEAD you can add the file and commit the file, but you cannot push the changes to Repository. To push the changes you can simply create a branch or move a branch to push the changes to repository.
+
+
+
+git merge: The git merge command lets you take the independent lines of development created by git branch and integrate them into a single branch.
+	1. git merge <branch>:  Merge the specified branch into the current branch.
+	2. git merge --no-ff <branch> : Merge the specified branch into the current branch, but always generate a merge commit (even if it was a fast-forward merge). This is useful for documenting all merges that occur in your repository.
+	3. Fast-forward: A fast-forward merge can occur when there is a linear path from the current branch tip to the target branch. i.e Instead of merging the branches, all Git has to do to integrate the histories is move (i.e., “fast forward”) the current branch tip up to the target branch tip.
+
+

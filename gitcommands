@@ -135,7 +135,26 @@ Using git checkout "commitID" command we can simply check the changes made in re
 	git checkout 0dc73b8 : Head moves to commitID and we can see the changes and decide to merge it or not.
 	git checkout branch: Head moves to previous branch.
 	git merge: merging both commits and creates merge commit.
+	git push: once we say git push, it has created new commit ffac4fc as shown below
+To https://github.com/naveensadanand/notes.git
+   0dc73b8..ffac4fc  gitLearning -> gitLearning
+
+When both sides made changes to the same area, we need to resolve it manually, we can see conflict chunk like this.
+<<<<<<< yours:sample.txt
+Conflict resolution is hard;
+let's go shopping.
+=======
+Git makes conflict resolution easy.
+>>>>>>> theirs:sample.txt
+
+The area where a pair of conflicting changes happened is marked with markers <<<<<<<, =======, and >>>>>>>. The part before the ======= is typically your side, and the part afterwards is typically their side.
+
+After seeing a conflict, you can do two things:
+	1. Decide not to merge. The only clean-ups you need are to reset the index file to the HEAD commit to reverse 2. and to clean up working tree changes made by 2. and 3.; git merge --abort can be used for this.
+	2. Resolve the conflicts. Git will mark the conflicts in the working tree. Edit the files into shape and git add them to the index. Use git commit to seal the deal.
 
 
+
+git fetch:
 
 

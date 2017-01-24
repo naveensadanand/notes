@@ -1,5 +1,5 @@
 1. init, remote, add, commit, push, pull, branch, checkout.
-
+2. remote
 git init
 	This will initialize a project and create hidden .git folder.
 
@@ -153,8 +153,133 @@ After seeing a conflict, you can do two things:
 	1. Decide not to merge. The only clean-ups you need are to reset the index file to the HEAD commit to reverse 2. and to clean up working tree changes made by 2. and 3.; git merge --abort can be used for this.
 	2. Resolve the conflicts. Git will mark the conflicts in the working tree. Edit the files into shape and git add them to the index. Use git commit to seal the deal.
 
+command flow:
+	git fetch
+	git checkout CommitID 
+	Check the changes, and try to merge.
+	git merge
+	At this stage it will throw error for merge conflict.
+"
+Auto-merging otherfile
+CONFLICT (content): Merge conflict in otherfile
+Automatic merge failed; fix conflicts and then commit the result.
+"
+	then open file "otherfile" and resolve conflict, and use commit.
 
+	git add
+	git commit
+	git push	
 
 git fetch:
+	1. Fetch branches and/or tags (collectively, "refs") from one or more other repositories, along with the objects necessary to complete their histories. 
+	2. Remote-tracking branches are updated.
+-all 
+fetches all remotes.
+
+-f or --force
+When git fetch is used with <rbranch>:<lbranch> refspec, it refuses to update the local branch <lbranch> unless the remote branch <rbranch> it fetches is a descendant of <lbranch>. 
+This option (-f) overrides that check.
+
+<repository>
+The "remote" repository that is the source of a fetch or pull operation. This parameter can be either a URL (see the section GIT URLS below) or the name of a remote.
+
+CONFIGURED REMOTE-TRACKING BRANCHES:
+git fetch allows you to configure remote.<repository>.fetch configuration variables. Typically such a variable may look like this:
+[remote "origin"]
+	fetch = +refs/heads/*:refs/remotes/origin/*
+
+When git fetch is run without specifying what branches and/or tags to fetch on the command line, e.g. git fetch origin or git fetch, remote.<repository>.fetch values are used as the refspecs—​they specify which refs to fetch and which local refs to update. The example above will fetch all branches that exist in the origin (i.e. any ref that matches the left-hand side of the value, refs/heads/*) and update the corresponding remote-tracking branches in the refs/remotes/origin/* hierarchy.
+
+EX: 
+	1. git fetch origin
+	The above command copies all branches from the remote refs/heads/ namespace and stores them to the local refs/remotes/origin/ namespace
+	2. git fetch origin +pu:pu maint:tmp
+	This updates (or creates, as necessary) branches pu and tmp in the local repository by fetching from the branches (respectively) pu and maint from the remote repository.
+GIT URLS:
+	1. Git supports ssh, git, http, and https protocols  (in addition, ftp, and ftps can be used for fetching, but this is inefficient and deprecated; do not use it).
+
+The following syntaxes may be used with them:
+	ssh://[user@]host.xz[:port]/path/to/repo.git/
+	git://host.xz[:port]/path/to/repo.git/
+	http[s]://host.xz[:port]/path/to/repo.git/
+	ftp[s]://host.xz[:port]/path/to/repo.git/
+	
+
+git pull:
+	1. git pull is shorthand for git fetch followed by git merge FETCH_HEAD to merge the retrieved branch heads into the current branch. With --rebase, it runs git rebase instead of git merge.
+Assume the following history exists and the current branch is "master":
+
+	  A---B---C master on origin
+	 /
+    D---E---F---G master
+	^
+	origin/master in your repository
+Then "git pull" will fetch and replay the changes from the remote master branch since it diverged from the local master (i.e., E) until its current commit (C) on top of master and record the result in a new commit (i.e H) along with the names of the two parent commits and a log message from the user describing the changes.
+
+	  A---B---C origin/master
+	 /         \
+    D---E---F---G---H master
+
+--ff
+When the merge resolves as a fast-forward, only update the branch pointer, without creating a merge commit. 
+
+--no-ff
+Create a merge commit even when the merge resolves as a fast-forward. 
+
+-r
+--rebase[=false|true|preserve|interactive]
+	1. When true, rebase the current branch on top of the upstream branch after fetching. If there is a remote-tracking branch corresponding to the upstream branch and the upstream branch was rebased since last fetched, the rebase uses that information to avoid rebasing non-local changes.
+	2. When set to preserve, rebase with the --preserve-merges option passed to git rebase so that locally created merge commits will not be flattened.
+	3. When false, merge the current branch into the upstream branch.
+	4. When interactive, enable the interactive mode of rebase.
+
+
+git remote:
+
+-v or --verbose
+	1. show remote url after name.
+
+Add a new remote, fetch, and check out a branch from it.
+	cmd: git remote
+	o/p: origin
+	cmd: git branch -r
+	o/p:  	origin/HEAD -> origin/master
+		origin/clanguage
+		origin/detachHeadCheck
+  		origin/gitLearning
+  		origin/jenkins
+		origin/master
+	cmd: git remote add staging git://git.kernel.org/.../gregkh/staging.git 
+	Above command will add remote repository git://git.kernel.org/.../gregkh/staging.git with name staging.
+	cmd: git remote
+	o/p: 	origin
+		staging
+	cmd: git fetch staging
+	o/p: 	From git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging
+	 * [new branch]      master     -> staging/master
+	 * [new branch]      staging-linus -> staging/staging-linus
+	 * [new branch]      staging-next -> staging/staging-next
+	cmd: git branch -r 
+	o/p:   	origin/HEAD -> origin/master
+		origin/clanguage
+		origin/detachHeadCheck
+ 		origin/gitLearning
+  		origin/jenkins
+  		origin/master
+		staging/master   Here new branch is coming.
+	cmd: git checkout -b staging staging/master
+	This will create new branch with origin staging, with this we can work further.
+
+Imitate git clone but track only selected branches
+
+$ mkdir project.git
+$ cd project.git
+$ git init
+$ git remote add -f -t master -m master origin git://example.com/git.git/
+$ git merge origin
+
+
+
+
 
 

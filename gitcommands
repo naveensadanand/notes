@@ -126,3 +126,12 @@ Note: Running git merge with non-trivial uncommitted changes is discouraged.
 Merge conflicts:
 While merging, amoung the changes made on comman ancestors version, non-overlapping once (i.e you changed the area of file and from other side left the area intact, vice-versa) are incorporated to final results.
 
+Example: if any changes from remote repo, with the help of fetch we can get the remote commit ID.
+	git fetch : this command gets the remote commit ID of latest commit made on remote repo.
+	From https://github.com/naveensadanand/notes
+	8974bdf..0dc73b8  gitLearning -> origin/gitLearning
+	Our branch is at Commit ID: 8974bdf and remote is having at 0dc73b8.
+Using git checkout "commitID" command we can simply check the changes made in remote commitID if everything is fine we can merge our remote commits with our commit resulting in new commit ID. This is the example of --no-ff.
+
+
+

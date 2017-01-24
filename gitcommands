@@ -132,6 +132,10 @@ Example: if any changes from remote repo, with the help of fetch we can get the 
 	8974bdf..0dc73b8  gitLearning -> origin/gitLearning
 	Our branch is at Commit ID: 8974bdf and remote is having at 0dc73b8.
 Using git checkout "commitID" command we can simply check the changes made in remote commitID if everything is fine we can merge our remote commits with our commit resulting in new commit ID. This is the example of --no-ff.
+	git checkout 0dc73b8 : Head moves to commitID and we can see the changes and decide to merge it or not.
+	git checkout branch: Head moves to previous branch.
+	git merge: merging both commits and creates merge commit.
+
 
 
 

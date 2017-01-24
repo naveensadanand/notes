@@ -92,11 +92,37 @@ Detached HEADs:
 	1. If you checkout a commit, it will switch to "detached HEAD".
 	2. In detached HEAD you can add the file and commit the file, but you cannot push the changes to Repository. To push the changes you can simply create a branch or move a branch to push the changes to repository.
 
-
+precautions while branch checkout:
+	if your working directory or staging area has uncommitted changes that conflict with the branch you’re checking out, Git won’t let you switch branches. It’s best to have a clean working state when you switch branches. The cleaning can be done using "Stashing and Cleaning".
 
 git merge: The git merge command lets you take the independent lines of development created by git branch and integrate them into a single branch.
-	1. git merge <branch>:  Merge the specified branch into the current branch.
-	2. git merge --no-ff <branch> : Merge the specified branch into the current branch, but always generate a merge commit (even if it was a fast-forward merge). This is useful for documenting all merges that occur in your repository.
-	3. Fast-forward: A fast-forward merge can occur when there is a linear path from the current branch tip to the target branch. i.e Instead of merging the branches, all Git has to do to integrate the histories is move (i.e., “fast forward”) the current branch tip up to the target branch tip.
+--ff
+When the merge resolves as a fast-forward, only update the branch pointer, without creating a merge commit. This is the default behavior.
 
+--no-ff
+Create a merge commit even when the merge resolves as a fast-forward.
+
+	1. git merge <branch>:  Merge the specified branch into the current branch.
+	2. git merge --no-ff <branch> : Merge the specified branch into the current branch, but always generate a merge commit (even if it was a fast-forward merge). This is useful for documenting all merges that occur in your repository. The default behavior of Git is to use fast-forwarding whenever possible. 
+	3. git config branch.master.mergeoptions  "--no-ff" this will change default behaviour of merger to --no-ff.
+	4. -ff Fast-forward: A fast-forward merge can occur when there is a linear path from the current branch tip to the target branch. i.e Instead of merging the branches, all Git has to do to integrate the histories is move (i.e., “fast forward”) the current branch tip up to the target branch tip. This will not create any merge commit.
+	4. 3-Way Merge: This is used in case where master progresses while the feature is in-progress. Used when several developers working on same project.
+
+	5. "git merge --abort": can only be run after the merge has resulted in conflicts. git merge --abort will abort the merge process and try to reconstruct the pre-merge state. 
+
+current branch is "master"
+	  A---B---C topic
+	 /
+    D---E---F---G master
+
+Then "git merge topic" will replay the changes made on the topic branch since it diverged from master (i.e., E) until its current commit (C) on top of master. This will results in new commit along with message of two parent commits and log message from user, master is at H.
+	  A---B---C topic
+	 /         \
+    D---E---F---G---H master
+
+
+Note: Running git merge with non-trivial uncommitted changes is discouraged.
+
+Merge conflicts:
+While merging, amoung the changes made on comman ancestors version, non-overlapping once (i.e you changed the area of file and from other side left the area intact, vice-versa) are incorporated to final results.
 

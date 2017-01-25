@@ -279,7 +279,89 @@ $ git remote add -f -t master -m master origin git://example.com/git.git/
 $ git merge origin
 
 
+git rebase:
+	git-rebase - Reapply commits on top of another base tip
+
+git rebase [-i | --interactive] [options] [--exec <cmd>] [--onto <newbase>]
+	[<upstream> [<branch>]]
+git rebase [-i | --interactive] [options] [--exec <cmd>] [--onto <newbase>]
+	--root [<branch>]
+git rebase --continue | --skip | --abort | --edit-todo
+
+	2. <branch> Working branch; defaults to HEAD. If <branch> is specified, git rebase will perform an automatic git checkout <branch> before doing anything else. Otherwise it remains on the current branch.
+	3. <upstream>: Upstream branch to compare against. If <upstream> is not specified, the upstream configured in branch.<name>.remote and branch.<name>.merge options will be used and the --fork-point option is assumed. If you are not on any branch and current branch not configured upstream then the rebase will abort.
+	4. --onto <newbase> Starting point at which to create the new commits. If the --onto option was supplied, the current branch is reset to <upstream>, or <newbase>. This has the exact same effect as git reset --hard <upstream> (or <newbase>).
+	5. All changes made by commits in the current branch but that are not in <upstream> are saved to a temporary area. This is the same set of commits that would be shown by git log <upstream>..HEAD
+	6. The commits that were previously saved into the temporary area are then reapplied to the current branch, one by one, in order. 
+	7. It is possible that a merge failure will prevent this process from being completely automatic.
+	8. After resolving merge failure, we can use command "git rebase --continue"
+	9. "git rebase --skip" command can bypass merge failure.
+	10. "git rebase --abort": command can be used to checkout original <branch> and remove the .git/rebase-apply working files.
+	11. --continue Restart the rebasing process after having resolved a merge conflict.
+	
 
 
+current branch is "topic": As per below graph, topic was branched out from master E, and since both are in progress master is at G and topic is at C.
 
+          A---B---C topic
+         /
+    D---E---F---G master
+
+git rebase master
+git rebase master topic  (combination of git checkout topic and git checkout master).
+After running any of above command result would be:
+                  A'--B'--C' topic
+                 /
+    D---E---F---G master
+Here the topic now is rebase to master G.
+Note: When rebase exit topic will remain the checked-out branch.
+
+rebase --onto
+	1. First let’s assume your topic is based on branch next. For example, a feature developed in topic depends on some functionality which is found in next.
+
+    o---o---o---o---o  master
+         \
+          o---o---o---o---o  next
+                           \
+                            o---o---o  topic
+
+	2. We want to make topic forked from branch master; for example, because the functionality on which topic depends was merged into the more stable master branch.
+    o---o---o---o---o  master
+        |            \
+        |             o'--o'--o'  topic
+         \
+          o---o---o---o---o  next
+
+We can get this using the following command:
+git rebase --onto master next topic
+
+--onto option is to rebase part of a branch. If we have the following situation:
+
+                            H---I---J topicB
+                           /
+                  E---F---G  topicA
+                 /
+    A---B---C---D  master
+then the command
+
+git rebase --onto master topicA topicB
+would result in:
+
+                 H'--I'--J'  topicB
+                /
+                | E---F---G  topicA
+                |/
+    A---B---C---D  master
+This is useful when topicB does not depend on topicA.
+
+A range of commits could also be removed with rebase.
+	1. A range of commit can be removed using rebase.
+	if you have E---F---G---H---I---J  topicA and you want to remove F and G, then use below command
+	git rebase --onto topic~5 topic~3 topicA
+	Above command results in  E---H'---I'---J'  topicA
+
+conflict case:
+	1. You can use git diff to locate the markers (<<<<<<) and make edits to resolve the conflict. For each file you edit, you need to tell Git that the conflict has been resolved, typically this would be done with "git add <filename>"
+	2. After resolving the conflict manually and updating the index with the desired resolution, you can continue the rebasing process with "git rebase --continue"
+	3. you can undo the git rebase with "git rebase --abort"
 

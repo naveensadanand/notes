@@ -35,7 +35,8 @@ git push:
 	git push <remote> --force : This results in a non-fast-forward merge. The --force flag overrides this behavior and makes the remote repository’s branch match your local one, deleting any upstream changes that may have occurred since you last pulled.
 
 	"git push <remote> --all": Push all of your local branches to the specified remote.
-
+	
+	"git push --force": 
 git pull:
         1. Pull changes from a remote repository.
         2. The git pull command merges the file from your remote repository (Bitbucket) into your local repository with a single command.
@@ -298,7 +299,9 @@ git rebase --continue | --skip | --abort | --edit-todo
 	9. "git rebase --skip" command can bypass merge failure.
 	10. "git rebase --abort": command can be used to checkout original <branch> and remove the .git/rebase-apply working files.
 	11. --continue Restart the rebasing process after having resolved a merge conflict.
-	
+	12. --no-ff With --interactive, cherry-pick all rebased commits instead of fast-forwarding over the unchanged ones. This ensures that the entire history of the rebased branch is composed of new commits.
+	13. --autostash --no-autostash: Automatically create a temporary stash before the operation begins, and apply it after the operation ends. This means that you can run rebase on a dirty worktree. However, use with care: the final stash application after a successful rebase might result in non-trivial conflicts.
+	14. --root: Rebase all commits reachable from <branch>, instead of limiting them with an <upstream>. This allows you to rebase the root commit(s) on a branch. 
 
 
 current branch is "topic": As per below graph, topic was branched out from master E, and since both are in progress master is at G and topic is at C.
@@ -364,4 +367,115 @@ conflict case:
 	1. You can use git diff to locate the markers (<<<<<<) and make edits to resolve the conflict. For each file you edit, you need to tell Git that the conflict has been resolved, typically this would be done with "git add <filename>"
 	2. After resolving the conflict manually and updating the index with the desired resolution, you can continue the rebasing process with "git rebase --continue"
 	3. you can undo the git rebase with "git rebase --abort"
+
+
+
+What is the difference between merge and rebase?
+Merge:
+current branch is "master"
+          A---B---C topic
+         /
+    D---E---F---G master
+
+Then "git merge topic" will replay the changes made on the topic branch since it diverged from master (i.e., E) until its current commit (C) on top of master. This will results in new commit along with message of two parent commits and log message from user, master is at H.
+
+Here performs a three-way merge between the two latest branch snapshots (G and C) and the most recent common ancestor of the two (E), creating a new snapshot (and commit) H.
+          A---B---C topic
+         /         \
+    D---E---F---G---H master
+
+$ git checkout master
+$ git merge experiment
+
+rebase:
+However, there is another way: you can take the patch of the change that was introduced in C and reapply it on top of G.
+
+        A---B---C topic
+                 \
+     D---E---F---G 
+		   master
+In this example, you’d run the following:
+$ git checkout experiment
+$ git rebase master
+At this point, you can go back to the master branch and do a fast-forward merge.
+$ git checkout master
+$ git merge experiment
+	
+		Master
+          A---B---C' topic
+                   \
+    D---E---F---G---H 
+                   
+Now, the snapshot pointed to by C' is exactly the same as the one that was pointed to by H in the above merge example. Here both master and topic branch pointing to C'.
+
+
+There is no difference in the end product of the integration, but rebasing makes for a cleaner history. If you examine the log of a rebased branch, it looks like a linear history: it appears that all the work happened in series, even when it originally happened in parallel. Often, you’ll do this to make sure your commits apply cleanly on a remote branch.
+
+More Interesting Rebases:
+You branched a topic branch (server) to add some server-side functionality to your project, and made a commit. Then, you branched off that to make the client-side changes (client) and committed a few times. Finally, you went back to your server branch and did a few more commits.
+
+	     	     Master
+C1 <-- C2 <-- C5 <-- C6
+      \
+      C3 <-- C4 <-- C10
+       \	   Server
+	C8 <-- C9
+	      Client
+Figure: A history with a topic branch(C8) off another topic branch(C3).
+Suppose you decide that you want to merge your client-side changes into your mainline for a release, but you want to hold off on the server-side changes until it’s tested further. 
+You can take changes of clinet C8 and C9 which is not present in Server, and replay them on your master branch by using the --onto option of git rebase:
+
+$ git rebase --onto master server client
+This basically says, “Take the client branch, figure out the patches since it diverged from the server branch, and replay these patches in the client branch to master.
+
+                     Master
+C1 <-- C2 <-- C5 <-- C6 <-- C8' <-- C9'
+      \				   Client
+      C3 <-- C4 <-- C10
+       \           Server
+
+Figure: Rebasing a topic branch(C8) off another topic branch(C3).
+
+Now you can fast-forward your master branch:
+$ git checkout master
+$ git merge client
+ 		                   Master
+C1 <-- C2 <-- C5 <-- C6 <-- C8' <-- C9'
+      \                            Client
+      C3 <-- C4 <-- C10
+       \           Server
+
+Figure. Fast-forwarding your master branch to include the client branch changes
+
+
+Let’s say you decide to pull in your server branch as well. 
+ou can rebase the server branch onto the master branch without having to check it out first by running git rebase [basebranch] [topicbranch] – which checks out the topic branch (in this case, server) for you and replays it onto the base branch (master):
+
+$ git rebase master server   #This command equals to "git checkout server" and "git rebase master"
+
+This replays your server work on top of your master work.
+
+                                   Master
+C1 <-- C2 <-- C5 <-- C6 <-- C8' <-- C9' <-- C3' <-- C4' <-- C10'
+      \                            Client    		   server
+
+Figure. Rebasing your server branch on top of your master branch
+
+Then, you can fast-forward the base branch (master):
+
+$ git checkout master
+$ git merge server
+
+You can remove the client and server branches.
+$ git branch -d client
+$ git branch -d server
+
+                                   			   Master
+C1 <-- C2 <-- C5 <-- C6 <-- C8' <-- C9' <-- C3' <-- C4' <-- C10'
+
+Figure. Final commit history
+
+Note: Do not rebase commits that exist outside your repository.
+In general the way to get the best of both worlds is to rebase local changes you’ve made but haven’t shared yet before you push them in order to clean up your story, but never rebase anything you’ve pushed somewhere. 
+You should also be able to share your branches by pushing them to a shared server, working with others on shared branches and rebasing your branches before they are shared.
 

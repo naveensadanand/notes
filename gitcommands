@@ -479,3 +479,195 @@ Note: Do not rebase commits that exist outside your repository.
 In general the way to get the best of both worlds is to rebase local changes you’ve made but haven’t shared yet before you push them in order to clean up your story, but never rebase anything you’ve pushed somewhere. 
 You should also be able to share your branches by pushing them to a shared server, working with others on shared branches and rebasing your branches before they are shared.
 
+git stash:
+	1. Use git stash when you want to record the current state of the working directory and the index, but want to go back to a clean working directory.
+	Calling git stash without any arguments is equivalent to git stash save.
+	2. Note that the stash is local to your Git repository.
+        3. "git stash list": List the stashes that you currently have. Its also list the name of branch, and commitID with commit message.
+        stash@{0}: WIP on newbranch: eefbdc0 file5
+
+git stash pop
+        Popping your stash removes the changes from your stash and reapplies them to your working copy.
+git stash apply
+        You can reapply the changes to your working copy and keep them in your stash with "git stash apply". This is useful if you want to apply the same stashed changes to multiple branches.
+
+Stashing untracked or ignored files:
+a. By default, running git stash will stash.
+        1. changes that have been added to your index (staged changes)
+        2. changes made to files that are currently tracked by Git (unstaged changes).
+b. But it will not stash:
+        1. New files in your working copy that have not yet been staged.
+        2. Files that have been ignored.
+
+Adding the -u option (or --include-untracked) tells git stash to also stash your untracked files:
+
+"git stash -u"  or  "git stash --include-untracked"
+
+You can include changes to ignored files as well by passing the -a option (or --all) when running git stash.
+
+"git stash -a" or "git stash -all"
+
+Managing multiple stashes
+        1. We can create stash several times to create multiple stashes, can can be view by command "git stash list".
+        2. It's good practice to annotate your stashes with a description, using git stash save "message for readability":
+
+$ git stash save "add style to our site"
+Saved working directory and index state On master: add style to our site
+HEAD is now at 5002d47 our new homepage
+
+$ git stash list
+stash@{0}: On master: add style to our site
+stash@{1}: WIP on master: 5002d47 our new homepage
+stash@{2}: WIP on master: 5002d47 our new homepage
+
+By default, git stash pop will re-apply the most recently created stash: stash@{0}
+You can choose which stash to re-apply by passing its identifier as the last argument, for example:
+$ git stash pop stash@{2}
+
+
+Viewing stash diffs:
+        1. "git stash show": You can view a summary of a stash with "git stash show".
+        2. Or pass the -p option (or --patch) to view the full diff of a stash "git stash -p" or "git stash --patch". You can also use this command to choose to stash just a single file, a collection of files, or individual changes from within files.
+
+Cleaning up your stash:
+        1. You can delete it with "git stash drop".
+        2. You can delete all of your stashes using command "git stash clear"
+
+
+.gitignore
+Git sees every file in your working copy as one of three things:
+        1. tracked - a file which has been previously staged or committed;
+        2. untracked - a file which has not been staged or committed; or
+        3. ignored - a file which Git has been explicitly told to ignore.
+You can add file manually.
+vi ~/.gitignore
+# ignore all logs
+*.log
+#ignore object files
+*.o
+#ignore .gitignore file in local repository.
+.gitignore
+
+Ignored files are usually build artifacts and machine generated files that can be derived from your repository source or should otherwise not be committed.
+Some common examples are:
+        1. dependency caches, such as the contents of /node_modules or /packages
+        2. compiled code, such as .o, .pyc, and .class files
+        3. build output directories, such as /bin, /out, or /target
+        4. files generated at runtime, such as .log, .lock, or .tmp
+        5. hidden system files, such as .DS_Store or Thumbs.db
+        6. personal IDE config files, such as .idea/workspace.xml
+
+.gitignore file can be created locally. This will ignore file for your local repository you are working on.
+
+
+Global Git ignore rules:
+        In addition, you can define global Git ignore patterns for all repositories on your local system by setting the Git core.excludesFile property.
+        "git config --global core.excludesFile ~/.gitignore" This command will add rule to excludesFile from /home/naveen/.gitignore
+
+Ignoring a previously committed file:
+        1. If you want to ignore a file that you've committed in the past, you'll need to delete the file from your repository and then add a .gitignore rule for it.
+        2. Using the --cached option with git rm means that the file will be deleted from your repository history, but will remain in your working directory as an ignored file.
+
+Example:
+$ echo debug.log >> .gitignore
+
+$ git rm --cached debug.log
+rm 'debug.log'
+
+$ git commit -m "Start ignoring debug.log"
+Note: You can omit the --cached option if you want to delete the file from both the repository and your local file system.
+
+Committing an ignored file:
+        1. We have a pattern called .log in .gitignore file, but is you want to commit build.log file, you can give exception to build.log file in .gitignore file.
+This can be achieve by two ways using -f option to add a file and we can give negation in .gitignore file.
+
+        Example1: git add -f debug.log
+                  git commit -m "Force adding debug.log"
+
+        Example2: open .gitignore file and add !debug.log, with this you can do normal commit.
+                git add debug.log
+                git commit -m "Adding debug.log"
+.gitignore and stash:
+        1. by default git stash ignores ignored files and only stashes changes to files that are tracked by Git. However, you can invoke git stash with the --all option to stash changes to ignored and untracked files as well.
+
+Debugging .gitignore files:
+        1. If you have complicated .gitignore patterns, or patterns spread over multiple .gitignore files, it can be difficult to track down "why a particular file is being ignored".
+        2. You can use the git check-ignore command with the -v (or --verbose) option to determine which pattern is causing a particular file to be ignored:
+        "<file containing the pattern> : <line number of the pattern> : <pattern>    <file name>"
+Example: "git check-ignore -v debug.log"
+        .gitignore:3:*.log  debug.log
+
+
+git clone
+git clone <repo> <dir>
+	1. Clones a repository into a newly created directory, creates remote-tracking branches for each branch in the cloned repository (visible using git branch -r), and creates and checks out an initial branch that is forked from the cloned repository’s currently active branch.
+	2. After clone a plain git fetch without arguments will update all the remote-tracking branches, and a git pull without arguments will in addition merge the remote master branch into the current master branch.
+	step1: git clone URL <dir> #this command creates a directory <dir> and clone the remote repository through URL into the <dir>.
+	step2: git fetch: This command without arguments will update all the remote-tracking branches.
+	step3: git pull: This command without arguments will in addition merge the remote master branch into the current master branch.
+	3. While cloning if we give "--single-branch" then it will clone only master branch, so step2 and step3 can be ignored.
+
+-l or --local
+When the repository to clone from is on a local machine.
+If the repository is specified as a local path (e.g., /path/to/repo), this is the default.
+If the repository is specified as a URL, then this flag is ignored 
+
+If the reference repository is on the local machine, automatically setup .git/objects/info/alternates to obtain objects from the reference repository. Using an already existing repository as an alternate will require fewer objects to be copied from the repository being cloned, reducing network and local storage costs.
+
+GIT URLS
+In general, URLs contain information about the transport protocol, the address of the remote server, and the path to the repository. Depending on the transport protocol, some of this information may be absent.
+The following syntaxes may be used with them:
+
+ssh://[user@]host.xz[:port]/path/to/repo.git/
+
+git://host.xz[:port]/path/to/repo.git/
+
+http[s]://host.xz[:port]/path/to/repo.git/
+
+ftp[s]://host.xz[:port]/path/to/repo.git/
+
+Examples:
+Clone from upstream:
+$ git clone git://git.kernel.org/pub/scm/.../linux.git my-linux
+$ cd my-linux
+$ make
+
+
+Make a local clone that borrows from the current directory, without checking things out:
+$ git clone -l -s -n . ../copy
+$ cd ../copy
+$ git show-branch
+
+Clone from upstream while borrowing from an existing local directory:
+
+$ git clone --reference /git/linux.git 	git://git.kernel.org/pub/scm/.../linux.git my-linux
+$ cd my-linux
+
+Create a bare repository to publish your changes to the public:
+$ git clone --bare -l /home/proj/.git /pub/scm/proj.git
+
+git revert:
+	1.  git revert is used to record some new commits to reverse the effect of some earlier commits.
+-e or --edit
+	With this option, git revert will let you edit the commit message prior to committing the revert.
+--continue
+Continue the operation in progress using the information in .git/sequencer. Can be used to continue after resolving conflicts in a failed cherry-pick or revert.
+--quit
+Forget about the current operation in progress. Can be used to clear the sequencer state after a failed cherry-pick or revert.
+--abort
+Cancel the operation and return to the pre-sequence state.
+
+EXAMPLES
+git revert HEAD~3
+	Revert the changes specified by the fourth last commit in HEAD and create a new commit with the reverted changes.
+
+git revert -n master~5..master~2
+	Revert the changes done by commits from the fifth last commit in master (included) to the third last commit in master (included), but do not create any commit with the reverted changes. The revert only modifies the working tree and the index.
+
+git revert <commit>
+        1. Generate a new commit that undoes all of the changes introduced in <commit>, then apply it to the current branch.
+        2. This can be useful, for example, if you’re tracking down a bug and find that it was introduced by a single commit. Instead of manually going in, fixing it, and committing a new snapshot, you can use git revert to automatically do all of this for you.
+
+git revert HEAD
+	Revert the commit we just created.
+

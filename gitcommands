@@ -70,10 +70,12 @@ Question on git add:
         2. "git clean -df mynewfile.txt" This command will remove mynewfile.txt from current directory. If you do not provide file name like "git clean -df" this will remove all unstaged file from working directory. So be careful while using "git clean -df" command.
 
 
-git commit:
+git commit: Record changes to the repository
 	The git commit takes the staged snapshot and commits it to the project history.
 	git commit -m "Start a feature"
 	This command will commit or take snapshot of staging area and add it to repository History.
+	git commit --amend -m "New and correct message"
+	To change the last commit, you can simply commit again, using the --amend flag.Therefore, use "amend" whenever you want to change / edit your very last and unpushed commit.
 
 git push:
 	"git push <remote> <branch>" : Push the specified branch to <remote>, along with all of the necessary commits and internal objects.
